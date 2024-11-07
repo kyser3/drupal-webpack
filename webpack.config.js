@@ -17,7 +17,6 @@ import TerserPlugin from "terser-webpack-plugin";
 
 export default (env, argv) => {
   const isProduction = (argv && argv.mode === 'production');
-  const devel = argv.mode === "development";
   const entry = getDrupalEntries(env, argv);
   return {
     mode: isProduction ? "production" : "development",
