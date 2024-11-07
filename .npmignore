@@ -1,0 +1,8 @@
+# Ignore .idea folders.
+.idea
+
+# Mac Files.
+.DS_Store
+
+# Ignore development files.
+/web
