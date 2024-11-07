@@ -128,6 +128,9 @@ async function install() {
     } else {
         console.log(`Configuration file '${destinationDir}/.webpack/config.yml' already exists and was left untouched - Be sure to compared against '${destinationDir}/.webpack/config.example.yml' for any changes or new features.`.success);
     }
+
+    // Graceful exit.
+    process.exit(0);
 }
 
 /**
