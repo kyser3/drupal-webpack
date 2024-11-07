@@ -1,0 +1,13 @@
+@use "variables";
+
+body {
+  background: variables.$red;
+
+  .foo {
+    background: variables.$blue;
+
+    &.bar {
+      background: variables.$green;
+    }
+  }
+}

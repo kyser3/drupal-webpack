@@ -1,0 +1,6 @@
+name: 'Foo'
+type: module
+description: 'This is not a real module.'
+package: 'Fake Modules'
+
+core_version_requirement: '^8.8 || ^9 || ^10 || ^11'

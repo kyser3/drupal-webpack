@@ -1,0 +1,40 @@
+# Drupal root path
+root: 'web'
+
+# Default custom drupal theme
+defaultTheme: 'my_custom_theme'
+
+# File Extensions
+extensions:
+  scripts: '.js'
+  styles: '.scss'
+
+# Underscore skipping
+skipUnderscoreFiles: true
+
+# Configurations for modules
+modules:
+  # JS files source & destination.
+  # JS files result in minified versions. Setting the same destination as the source will not overwrite original files.
+  scripts:
+    source: 'js'
+    destination: 'js'
+  # SCSS files source & destination.
+  styles:
+    source: 'scss'
+    destination: 'css'
+
+# Configurations for themes
+themes:
+  # Single Directory Components folder.
+  # CSS & Minified JS will be generated in the same location as found SCSS & JS.
+  components: 'components'
+  # JS files source & destination.
+  # JS files result in minified versions. Setting the same destination as the source will not overwrite original files.
+  scripts:
+    source: 'js'
+    destination: 'js'
+  # SCSS files source & destination.
+  styles:
+    source: 'scss'
+    destination: 'css'
