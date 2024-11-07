@@ -1,3 +1,15 @@
+/**
+ * This file is managed by the drupal-webpack package.
+ * @see https://www.npmjs.com/package/drupal-webpack?activeTab=readme
+ * @see https://github.com/kyser3/drupal-webpack
+ *
+ * Feel free to modify this configuration to your liking if you know what you're doing.
+ *
+ * Any improvements/suggestions are appreciated.
+ *
+ * Issues can be created on GitHub: https://github.com/kyser3/drupal-webpack
+ */
+
 import 'dotenv/config';
 import path from 'path';
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
