@@ -1,9 +1,8 @@
 import 'dotenv/config';
 import path from 'path';
-import webpack from 'webpack';
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
-import { getDrupalEntries } from "./.webpack/includes/drupal.js";
+import { getDrupalEntries } from ".webpack/includes/drupal.js";
 import TerserPlugin from "terser-webpack-plugin";
 
 export default (env, argv) => {

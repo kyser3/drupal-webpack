@@ -42,9 +42,11 @@ async function processArguments() {
     // The first argument should always be the command.
     let command = argv['_'][0];
 
+    // For now, we're setting the command as install by default. We'll change this once we add more later.
+    command = 'install';
+
     // If the first argument is not set, we'll prompt the user for additional information.
     if (!command) {
-        // Welcome message!
         const promptResponse = await prompts(
             {
                 message: "Which command would you like to execute?",
@@ -111,17 +113,19 @@ async function install() {
     await fs.promises.mkdir(`${destinationDir}/.webpack/includes`, {recursive: true});
 
     // Copy our files over.
+    console.log("Setting up webpack files...".info);
     await copyFilesAsync(`${root}/.webpack/includes`, `${destinationDir}/.webpack/includes`);
     await copyFilesAsync(`${root}/.webpack/config.example.yml`, `${destinationDir}/.webpack/config.example.yml`);
     await copyFilesAsync(`${root}/webpack.config.js`, `${destinationDir}/webpack.config.js`);
 
+    // Success message.
+    console.log("Successfully created drupal-webpack files in your project.".success);
+
     // If a config.yml file doesn't exist, we'll create one for the user.
     if (!(await fileExists(`${destinationDir}/.webpack/config.yml`))) {
         await copyFilesAsync(`${root}/.webpack/config.example.yml`, `${destinationDir}/.webpack/config.yml`);
+        console.log(`Configuration file was generated at: '${destinationDir}/.webpack/config.yml' - Be sure to check this file before running webpack.`.success);
     }
-
-    // Success message.
-    console.log("Successfully created drupal-webpack files in your project. Get started by creating a '.webpack/config.yml' file using the example file found in the directory.".success);
 }
 
 /**
