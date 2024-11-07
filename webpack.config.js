@@ -9,8 +9,6 @@
  *
  * Issues can be created on GitHub: https://github.com/kyser3/drupal-webpack
  */
-
-import 'dotenv/config';
 import path from 'path';
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
