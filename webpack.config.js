@@ -9,15 +9,15 @@
  *
  * Issues can be created on GitHub: https://github.com/kyser3/drupal-webpack
  */
-import path from 'path';
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
-import { getDrupalEntries } from ".webpack/includes/drupal.js";
-import TerserPlugin from "terser-webpack-plugin";
+const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
+const drupal = require("./.webpack/includes/drupal.js");
+const TerserPlugin = require("terser-webpack-plugin");
 
-export default (env, argv) => {
+module.exports = (env, argv) => {
   const isProduction = (argv && argv.mode === 'production');
-  const entry = getDrupalEntries(env, argv);
+  const entry = drupal.getDrupalEntries(env, argv);
   return {
     mode: isProduction ? "production" : "development",
     entry: entry,

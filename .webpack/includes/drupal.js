@@ -1,14 +1,18 @@
-// Imports.
-import * as Util from './util.js';
-import * as path from'path';
-import * as fs from "fs";
-import * as yaml from "js-yaml";
-import { globSync } from "glob";
+// noinspection JSUnresolvedReference
+
+const Util = require("./util.js");
+const path = require("path");
+const fs = require("fs");
+const yaml = require("js-yaml");
+const {
+  globSync,
+} = require('glob');
 
 // Get configuration, or throw exception on error.
 // @see config.yml
 let config;
 try {
+  // noinspection JSCheckFunctionSignatures
   config = yaml.load(fs.readFileSync('./.webpack/config.yml', 'utf8'));
 } catch (e) {
   throw "Drupal Webpack configuration could not be loaded.";
@@ -37,7 +41,7 @@ validateConfig();
  * @returns {string}
  *   Path to Drupal's root, e.g. /web.
  */
-export const getDrupalRoot = () => {
+const getDrupalRoot = () => {
   const dirPath = path.resolve(path.join(path.resolve(), config.root));
   if (fs.lstatSync(dirPath).isDirectory()) {
     return dirPath;
@@ -59,54 +63,8 @@ export const getDrupalRoot = () => {
  * @returns {string}
  *   Absolute path to the Drupal package.
  */
-export const getDrupalCustomPackagePath = (type, id) => {
+const getDrupalCustomPackagePath = (type, id) => {
   return path.relative(path.resolve(), path.join(getDrupalRoot(), `${type}s`, 'custom', id));
-}
-
-/**
- * Build the webpack entry object using assets from across the Drupal installation.
- *
- * @param env
- *   Environment variables set through the command line or obtain from .env.
- */
-export const getDrupalEntries = (env) => {
-  let entries = {};
-
-  // If 'module' is set in the environment, we attempt to build entries for the specified module.
-  if ('module' in env) {
-    return Util.objectMerge(entries, getPackageEntries(env.module, 'module'));
-  }
-
-  // If 'theme' is set, we want to get entries for a custom theme.
-  if ('theme' in env) {
-    return Util.objectMerge(entries, getPackageEntries(env.theme, 'theme'));
-  }
-
-  // If 'modules' is set, we want to get entries for all custom modules.
-  if ('modules' in env || 'all' in env) {
-    let customModulesPath = path.relative(path.resolve(), path.join(getDrupalRoot(), 'modules', 'custom'));
-    let customModuleDirectories = Util.getDirectories(customModulesPath);
-    customModuleDirectories.forEach(dirname => {
-      entries = Util.objectMerge(entries, getPackageEntries(dirname, 'module'));
-    });
-    return entries;
-  }
-
-  // If 'themes' is set, we want to get entries for all custom themes.
-  if ('themes' in env || 'all' in env) {
-    let customThemesPath = path.relative(path.resolve(), path.join(getDrupalRoot(), 'themes', 'custom'));
-    let customThemeDirectories = Util.getDirectories(customThemesPath);
-    customThemeDirectories.forEach(dirname => {
-      entries = Util.objectMerge(entries, getPackageEntries(dirname, 'theme'));
-    });
-    return entries;
-  }
-
-  // Now we handle environment variables.
-  // If a default drupal theme is set, we can parse entries for it.
-  entries = Util.objectMerge(entries, getPackageEntries(config.defaultTheme, 'theme'));
-
-  return entries;
 }
 
 /**
@@ -126,7 +84,7 @@ export const getDrupalEntries = (env) => {
  * @returns {{}}
  *   Eligible "entry" items for Webpack configuration.
  */
-export const getPackageEntries = (id, type, packagePath = undefined) => {
+const getPackageEntries = (id, type, packagePath = undefined) => {
   // Get the package path if it wasn't set.
   if (packagePath === undefined) {
     packagePath = getDrupalCustomPackagePath(type, id);
@@ -158,7 +116,7 @@ export const getPackageEntries = (id, type, packagePath = undefined) => {
  * @returns {{}}
  *   Eligible "entry" items for Webpack configuration.
  */
-export const getCustomModuleEntries = (modulePath) => {
+const getCustomModuleEntries = (modulePath) => {
   let entries = {};
 
   // Build .js entries.
@@ -195,7 +153,7 @@ export const getCustomModuleEntries = (modulePath) => {
  * @returns {{}}
  *   Eligible "entry" items for Webpack configuration.
  */
-export const getCustomThemeEntries = (themePath) => {
+const getCustomThemeEntries = (themePath) => {
   let entries = {};
 
   // Build .js entries.
@@ -228,12 +186,12 @@ export const getCustomThemeEntries = (themePath) => {
  * @returns {{}}
  *   Entries.
  */
-export function buildEntries(
+const buildEntries = (
   packagePath,
   source,
   destination,
   extension,
-){
+) => {
   // Instantiate entries.
   let entries = {};
 
@@ -261,6 +219,52 @@ export function buildEntries(
     }
     entries[chunk].push("./" + filePath);
   });
+
+  return entries;
+}
+
+/**
+ * Build the webpack entry object using assets from across the Drupal installation.
+ *
+ * @param env
+ *   Environment variables set through the command line or obtain from .env.
+ */
+exports.getDrupalEntries = (env) => {
+  let entries = {};
+
+  // If 'module' is set in the environment, we attempt to build entries for the specified module.
+  if ('module' in env) {
+    return Util.objectMerge(entries, getPackageEntries(env.module, 'module'));
+  }
+
+  // If 'theme' is set, we want to get entries for a custom theme.
+  if ('theme' in env) {
+    return Util.objectMerge(entries, getPackageEntries(env.theme, 'theme'));
+  }
+
+  // If 'modules' is set, we want to get entries for all custom modules.
+  if ('modules' in env || 'all' in env) {
+    let customModulesPath = path.relative(path.resolve(), path.join(getDrupalRoot(), 'modules', 'custom'));
+    let customModuleDirectories = Util.getDirectories(customModulesPath);
+    customModuleDirectories.forEach(dirname => {
+      entries = Util.objectMerge(entries, getPackageEntries(dirname, 'module'));
+    });
+    return entries;
+  }
+
+  // If 'themes' is set, we want to get entries for all custom themes.
+  if ('themes' in env || 'all' in env) {
+    let customThemesPath = path.relative(path.resolve(), path.join(getDrupalRoot(), 'themes', 'custom'));
+    let customThemeDirectories = Util.getDirectories(customThemesPath);
+    customThemeDirectories.forEach(dirname => {
+      entries = Util.objectMerge(entries, getPackageEntries(dirname, 'theme'));
+    });
+    return entries;
+  }
+
+  // Now we handle environment variables.
+  // If a default drupal theme is set, we can parse entries for it.
+  entries = Util.objectMerge(entries, getPackageEntries(config.defaultTheme, 'theme'));
 
   return entries;
 }

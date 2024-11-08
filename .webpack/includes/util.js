@@ -1,6 +1,6 @@
 // Requirements.
-import * as fs from 'fs';
-import _ from "lodash";
+const fs = require("fs");
+const _ = require("lodash");
 
 /**
  * Merge two objects using lodash.
@@ -12,7 +12,7 @@ import _ from "lodash";
  * @returns {{}}
  *   Merged object.
  */
-export const objectMerge = (object1, object2) => {
+exports.objectMerge = (object1, object2) => {
   return _.mergeWith({}, object1, object2, function(a, b) {
     if (_.isArray(a)) {
       return b.concat(a);
@@ -29,7 +29,7 @@ export const objectMerge = (object1, object2) => {
  * @returns {string[]}
  *   Array of directories found.
  */
-export const getDirectories = source =>
+exports.getDirectories = source =>
   fs.readdirSync(source, { withFileTypes: true })
     .filter(dirent => dirent.isDirectory())
     .map(dirent => dirent.name)
@@ -43,7 +43,7 @@ export const getDirectories = source =>
  * @returns {string[]}
  *   Array of files found.
  */
-export const getFiles = source =>
+exports.getFiles = source =>
   fs.readdirSync(source, { withFileTypes: true })
     .filter(file => !file.isDirectory())
     .map(file => file.name)
@@ -57,6 +57,6 @@ export const getFiles = source =>
  * @returns {boolean}
  *   Returns TRUE if the path exists, or FALSE otherwise.
  */
-export const pathExists = (path) => {
+exports.pathExists = (path) => {
   return fs.existsSync(path);
 }
