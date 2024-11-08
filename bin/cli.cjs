@@ -127,7 +127,7 @@ async function install() {
         await copyFilesAsync(`${root}/.webpack/config.example.yml`, `${destinationDir}/.webpack/config.yml`);
         console.log(`Configuration file was generated at: '${destinationDir}/.webpack/config.yml' - Be sure to check this file before running webpack.`.success);
     } else {
-        console.log(`Configuration file '${destinationDir}/.webpack/config.yml' already exists and was left untouched - Be sure to compared against '${destinationDir}/.webpack/config.example.yml' for any changes or new features.`.success);
+        console.log(`Configuration file '${destinationDir}/.webpack/config.yml' already exists and was left untouched - Be sure to compare against '${destinationDir}/.webpack/config.example.yml' for any changes or new features.`.success);
     }
 }
 
