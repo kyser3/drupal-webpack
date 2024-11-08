@@ -1,4 +1,6 @@
-# Drupal Webpack
+# Drupal Webpack  [![npm version](https://img.shields.io/npm/v/drupal-webpack?color=%233b83f7)](https://www.npmjs.com/package/drupal-webpack)
+
+[![NPM](https://nodei.co/npm/drupal-webpack.png?compact=true)](https://nodei.co/npm/drupal-webpack/)
 
 This package facilitates the installation of Webpack 5 for Drupal 8+.
 
