@@ -4,12 +4,9 @@
   "bin": {
     "druwp": "./bin/cli.js"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
+  "author": "kyser3",
   "license": "MIT",
-  "description": "",
+  "description": "This package facilitates the installation of Webpack 5 for Drupal 8+.",
   "dependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
