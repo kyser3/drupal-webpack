@@ -3,7 +3,7 @@
  * @see https://www.npmjs.com/package/drupal-webpack?activeTab=readme
  * @see https://github.com/kyser3/drupal-webpack
  *
- * Feel free to modify this configuration to your liking if you know what you're doing.
+ * Feel free to modify this configuration to your liking.
  *
  * Any improvements/suggestions are appreciated.
  *
