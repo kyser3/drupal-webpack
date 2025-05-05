@@ -89,7 +89,7 @@ async function install() {
 
     // If the .webpack directory already exists, it will be replaced.
     if (await directoryExists(`${destinationDir}/.webpack`)) {
-        if (await confirm("CAUTION: The directory '.webpack' already exist in your codebase and will be replaced. Proceed?".warning) === false) {
+        if (await confirm("CAUTION: The directory '.webpack' already exists in your codebase and will be replaced. Proceed?".warning) === false) {
             console.log("Canceled.".info)
             return;
         }
@@ -99,7 +99,7 @@ async function install() {
 
     // Also check the existence of the 'webpack.config.js' file.
     if (await fileExists(`${destinationDir}/webpack.config.js`)) {
-        if (await confirm("CAUTION: The file 'webpack.config.js' already exist in your codebase and will be replaced. Proceed?".warning) === false) {
+        if (await confirm("CAUTION: The file 'webpack.config.js' already exists in your codebase and will be replaced. Proceed?".warning) === false) {
             console.log("Canceled.".info)
             return;
         }

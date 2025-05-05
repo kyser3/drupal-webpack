@@ -25,6 +25,9 @@ try {
  */
 const validateConfig = () => {
   if (!config.extensions.scripts) {
+    throw "Missing configuration: [config.extensions.packages] - Please verify the 'config.yml' file found in the '.webpack' directory.";
+  }
+  if (!config.extensions.scripts) {
     throw "Missing configuration: [config.extensions.scripts] - Please verify the 'config.yml' file found in the '.webpack' directory.";
   }
   if (!config.extensions.styles) {
@@ -50,6 +53,22 @@ const getDrupalRoot = () => {
 }
 
 /**
+ * Get the path to a directory housing custom packages of a specified type.
+ *
+ * This assumes that the Drupal installation follows best practices and stores custom packages in a nested
+ * "custom" folder within the package root folder. e.g. /web/modules/custom & /web/themes/custom.
+ *
+ * @param type
+ *   Drupal package type. e.g. "module" or "theme".
+ *
+ * @returns {string}
+ *   Absolute path to the packages' directory.
+ */
+const getDrupalCustomPackagesTypePath = (type) => {
+  return path.relative(path.resolve(), path.join(getDrupalRoot(), `${type}s`, 'custom'));
+}
+
+/**
  * Get the path to a custom Drupal package.
  *
  * This assumes that the Drupal installation follows best practices and stores custom packages in a nested
@@ -64,7 +83,7 @@ const getDrupalRoot = () => {
  *   Absolute path to the Drupal package.
  */
 const getDrupalCustomPackagePath = (type, id) => {
-  return path.relative(path.resolve(), path.join(getDrupalRoot(), `${type}s`, 'custom', id));
+  return path.relative(path.resolve(), path.join(getDrupalCustomPackagesTypePath(type), id));
 }
 
 /**
@@ -92,7 +111,7 @@ const getPackageEntries = (id, type, packagePath = undefined) => {
 
   // If the package does not exist, we can put a warning in the console.
   if (!Util.pathExists(packagePath)) {
-    console.warn(`The ${id} ${type} does not exist in your codebase. No assets will be compiled for this ${type}.`);
+    console.warn(`The ${id} ${type} does not exist in your codebase at '${packagePath}'. No assets will be compiled for this ${type}.`);
     // @TODO Add a "Did you mean?" Don't know what this entails but it's not a priority...
   }
 
@@ -172,6 +191,25 @@ const getCustomThemeEntries = (themePath) => {
 }
 
 /**
+ * Get all package entries of a given package type.
+ *
+ * @param type
+ *   The type of package to get all entries for.
+ *
+ * @returns {{}}
+ *   Entries.
+ */
+const getAllPackageEntriesOfType = (type) => {
+  let entries = {};
+  let customPackagesPath = getDrupalCustomPackagesTypePath(type);
+  let customPackagesDirectories = Util.getDirectories(customPackagesPath);
+  customPackagesDirectories.forEach(dirname => {
+    entries = Util.objectMerge(entries, getPackageEntries(dirname, type));
+  });
+  return entries;
+}
+
+/**
  * Build webpack entries given a folder in a package.
  *
  * @param packagePath
@@ -227,7 +265,7 @@ const buildEntries = (
  * Build the webpack entry object using assets from across the Drupal installation.
  *
  * @param env
- *   Environment variables set through the command line or obtain from .env.
+ *   Environment variables set through the command line or obtained from .env.
  */
 exports.getDrupalEntries = (env) => {
   let entries = {};
@@ -242,29 +280,29 @@ exports.getDrupalEntries = (env) => {
     return Util.objectMerge(entries, getPackageEntries(env.theme, 'theme'));
   }
 
-  // If 'modules' is set, we want to get entries for all custom modules.
-  if ('modules' in env || 'all' in env) {
-    let customModulesPath = path.relative(path.resolve(), path.join(getDrupalRoot(), 'modules', 'custom'));
-    let customModuleDirectories = Util.getDirectories(customModulesPath);
-    customModuleDirectories.forEach(dirname => {
-      entries = Util.objectMerge(entries, getPackageEntries(dirname, 'module'));
-    });
-    return entries;
+  // If 'packageType' is set, we want to get entries for all custom packages of the given type.
+  if ('packageType' in env) {
+    const packages = config.packages[env.packageType];
+    if (packages === '*') {
+      return getAllPackageEntriesOfType(env.packageType);
+    } else {
+      packages.forEach(packageName => {
+        entries = Util.objectMerge(entries, getPackageEntries(packageName, env.packageType));
+      });
+      return entries;
+    }
   }
 
-  // If 'themes' is set, we want to get entries for all custom themes.
-  if ('themes' in env || 'all' in env) {
-    let customThemesPath = path.relative(path.resolve(), path.join(getDrupalRoot(), 'themes', 'custom'));
-    let customThemeDirectories = Util.getDirectories(customThemesPath);
-    customThemeDirectories.forEach(dirname => {
-      entries = Util.objectMerge(entries, getPackageEntries(dirname, 'theme'));
-    });
-    return entries;
+  // By default, we compile assets for all configured packages.
+  for (const [packageType, packages] of Object.entries(config.packages)) {
+    if (packages === '*') {
+      entries = Util.objectMerge(entries, getAllPackageEntriesOfType(packageType));
+    } else {
+      packages.forEach(packageName => {
+        entries = Util.objectMerge(entries, getPackageEntries(packageName, packageType));
+      });
+    }
   }
-
-  // Now we handle environment variables.
-  // If a default drupal theme is set, we can parse entries for it.
-  entries = Util.objectMerge(entries, getPackageEntries(config.defaultTheme, 'theme'));
 
   return entries;
 }

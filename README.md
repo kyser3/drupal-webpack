@@ -36,9 +36,58 @@ yarn druwp install
 
 After this is done, refer to the `.webpack/config.yml` file that has been created and adjust it to your liking.
 
+```yaml
+# Drupal root path
+root: 'web'
+
+# Determine which packages to compile.
+# A value of '*' means that all packages of the specified type will be treated.
+packages:
+  module: '*'
+  theme: '*'
+
+# File Extensions
+extensions:
+  scripts: '.js'
+  styles: '.scss'
+
+# Underscore skipping
+skipUnderscoreFiles: true
+
+# Configurations for modules
+modules:
+  # JS files source & destination.
+  # JS files result in minified versions. Setting the same destination as the source will not overwrite original files.
+  scripts:
+    source: 'js'
+    destination: 'js'
+  # SCSS files source & destination.
+  styles:
+    source: 'scss'
+    destination: 'css'
+
+# Configurations for themes
+themes:
+  # Single Directory Components folder.
+  # CSS & Minified JS will be generated in the same location as found SCSS & JS.
+  components: 'components'
+  # JS files source & destination.
+  # JS files result in minified versions. Setting the same destination as the source will not overwrite original files.
+  scripts:
+    source: 'js'
+    destination: 'js'
+  # SCSS files source & destination.
+  styles:
+    source: 'scss'
+    destination: 'css'
+```
+
 Below are examples of using webpack after it has been configured:
 
-### Compile assets - Will compile only for the default drupal custom theme configured
+### Compile all assets for configured packages
+
+_This will compile assets for all packages configured in the `packages` key of the configuration._
+_By default, this is all found custom modules and themes._
 
 ```
 npm exec webpack
@@ -50,10 +99,10 @@ npm exec webpack
 npm exec webpack -- --env theme=my_custom_theme
 ```
 
-### Compile assets for all custom themes
+### Compile assets for all configured custom themes
 
 ```
-npm exec webpack -- --env themes
+npm exec webpack -- --env packageType=theme
 ```
 
 ### Compile assets for a given custom module
@@ -62,10 +111,10 @@ npm exec webpack -- --env themes
 npm exec webpack -- --env module=my_custom_module
 ```
 
-### Compile assets for all custom modules
+### Compile assets for all configured custom modules
 
 ```
-npm exec webpack -- --env modules
+npm exec webpack -- --env packageType=module
 ```
 
 ## Compiled Assets & Default Behaviour
