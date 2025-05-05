@@ -89,7 +89,7 @@ async function install() {
 
     // If the .webpack directory already exists, it will be replaced.
     if (await directoryExists(`${destinationDir}/.webpack`)) {
-        if (await confirm("CAUTION: The directory '.webpack' already exist in your codebase and will be replaced. Proceed?".warning) === false) {
+        if (await confirm("CAUTION: The directory '.webpack' already exists in your codebase and will be replaced. Proceed?".warning) === false) {
             console.log("Canceled.".info)
             return;
         }
@@ -98,12 +98,9 @@ async function install() {
     }
 
     // Also check the existence of the 'webpack.config.js' file.
+    let webpackConfigExists = false;
     if (await fileExists(`${destinationDir}/webpack.config.js`)) {
-        if (await confirm("CAUTION: The file 'webpack.config.js' already exist in your codebase and will be replaced. Proceed?".warning) === false) {
-            console.log("Canceled.".info)
-            return;
-        }
-        rimraf.sync(`${destinationDir}/webpack.config.js`);
+        webpackConfigExists = true;
     }
 
     // Prepare our directories.
@@ -117,7 +114,13 @@ async function install() {
     console.log("Setting up webpack files...".info);
     await copyFilesAsync(`${root}/.webpack/includes`, `${destinationDir}/.webpack/includes`);
     await copyFilesAsync(`${root}/.webpack/config.example.yml`, `${destinationDir}/.webpack/config.example.yml`);
-    await copyFilesAsync(`${root}/webpack.config.js`, `${destinationDir}/webpack.config.js`);
+    if (webpackConfigExists) {
+        await copyFilesAsync(`${root}/webpack.config.js`, `${destinationDir}/.webpack/webpack.config.vanilla.js`);
+        console.log("A webpack.config.js file already exists in your codebase and won't be replaced.".warning);
+        console.log("Instead, a webpack.config.vanilla.js has been created in the .webpack directory. You can refer to this file to review any changes that were made in the drupal-webpack package.".warning);
+    } else {
+        await copyFilesAsync(`${root}/webpack.config.js`, `${destinationDir}/webpack.config.js`);
+    }
 
     // Success message.
     console.log("Successfully created drupal-webpack files in your project.".success);
