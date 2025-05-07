@@ -1,8 +1,11 @@
 # Drupal root path
 root: 'web'
 
-# Default custom drupal theme
-defaultTheme: 'my_custom_theme'
+# Determine which packages to compile.
+# A value of '*' means that all packages of the specified type will be treated.
+packages:
+  module: '*'
+  theme: '*'
 
 # File Extensions
 extensions:
