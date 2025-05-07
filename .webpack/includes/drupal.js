@@ -1,5 +1,13 @@
 // noinspection JSUnresolvedReference
 
+/**
+ * File containing helper functions for Drupal.
+ *
+ * This file handles declaration of functions that will be used to obtain entries from custom packages within
+ * the Drupal installation.
+ *
+ * This file also interfaces with the custom config.yml file.
+ */
 const Util = require("./util.js");
 const path = require("path");
 const fs = require("fs");
