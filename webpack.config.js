@@ -11,6 +11,7 @@
  */
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const drupal = require("./.webpack/includes/drupal.js");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -31,7 +32,7 @@ module.exports = (env, argv) => {
       new RemoveEmptyScriptsPlugin({}),
       // CSS extraction into dedicated file.
       new MiniCssExtractPlugin({
-        filename: "[name].css",
+        filename: "[name].min.css",
       })
     ],
     module: {
@@ -81,14 +82,17 @@ module.exports = (env, argv) => {
     optimization: {
       removeEmptyChunks: true,
       minimize: true,
-      minimizer: [new TerserPlugin({
-        terserOptions: {
-          format: {
-            comments: false,
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            format: {
+              comments: false,
+            },
           },
-        },
-        extractComments: false,
-      })],
+          extractComments: false,
+        }),
+        new CssMinimizerPlugin()
+      ],
     },
     watchOptions: {
       ignored: /node_modules/,

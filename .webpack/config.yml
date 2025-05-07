@@ -17,12 +17,11 @@ skipUnderscoreFiles: true
 
 # Configurations for modules
 modules:
-  # JS files source & destination.
-  # JS files result in minified versions. Setting the same destination as the source will not overwrite original files.
+  # JS files source & destination directories.
   scripts:
     source: 'js'
     destination: 'js'
-  # SCSS files source & destination.
+  # SCSS files source & destination directories.
   styles:
     source: 'scss'
     destination: 'css'
@@ -30,14 +29,13 @@ modules:
 # Configurations for themes
 themes:
   # Single Directory Components folder.
-  # CSS & Minified JS will be generated in the same location as found SCSS & JS.
+  # Minified CSS & JS will be generated in the same location as found SCSS & JS.
   components: 'components'
-  # JS files source & destination.
-  # JS files result in minified versions. Setting the same destination as the source will not overwrite original files.
+  # JS files source & destination directories.
   scripts:
     source: 'js'
     destination: 'js'
-  # SCSS files source & destination.
+  # SCSS files source & destination directories.
   styles:
     source: 'scss'
     destination: 'css'
