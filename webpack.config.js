@@ -74,7 +74,10 @@ module.exports = (env, argv) => {
               options: {
                 sourceMap: true,
               }
-            }
+            },
+            {
+              loader: 'webpack-import-glob-loader',
+            },
           ]
         },
       ]
