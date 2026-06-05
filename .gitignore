@@ -9,3 +9,6 @@ web/**/*.css
 
 # IDE files.
 .idea
+
+# Mac files.
+.DS_Store
